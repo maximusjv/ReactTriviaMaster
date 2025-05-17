@@ -1,3 +1,5 @@
+import * as React from "react";
+
 const Game: React.FC = () => {
     return (
         <div className="flex flex-col items-center justify-center h-screen bg-gray-100">

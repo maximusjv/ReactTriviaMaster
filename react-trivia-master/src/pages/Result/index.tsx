@@ -1,3 +1,4 @@
+import * as React from "react";
 
 
 const Result: React.FC = () => {

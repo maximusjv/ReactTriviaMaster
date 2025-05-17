@@ -20,8 +20,6 @@ createRoot(document.getElementById('root')!).render(
           <Route path="/results" element={<ResultPage/>} />
           <Route path="/game" element={<GamePage/>} />
         </Route>
-
-       
     </Routes>
     </BrowserRouter>
   </StrictMode>,
