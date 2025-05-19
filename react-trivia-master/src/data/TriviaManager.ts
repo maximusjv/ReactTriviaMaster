@@ -11,26 +11,36 @@ export type TriviaOptions = {
 
 
 export default class TriviaManager {
- 
+
+  _categories_map: Map<number | string, Category>;
 
   private static instance: TriviaManager | undefined = undefined;
   public static async getInstance(): Promise<TriviaManager> {
       if(TriviaManager.instance) return TriviaManager.instance;
       else {
         const db = await OpenTriviaDB.init();
-        const categories_map = new Map<number | string, Category>();
-        (await db.fetchCategories()).forEach((cat) => {
-          categories_map.set(cat.id, cat);
-          categories_map.set(cat.name, cat);
-        });
-        return TriviaManager.instance = new TriviaManager(db, categories_map);
+        const categories = await db.fetchCategories();
+
+
+
+        return TriviaManager.instance = new TriviaManager(db, categories);
       }
   }
 
   private constructor(
     private _DB: OpenTriviaDB,
-    private _categories_map: Map<number | string, Category>
+    private _categories: Category[],
     ) {
+    const categories_map = new Map<number | string, Category>();
+    _categories.forEach((cat) => {
+      categories_map.set(cat.id, cat);
+      categories_map.set(cat.name, cat);
+    });
+    this._categories_map = categories_map;
+  }
+
+  get categories() {
+    return this._categories;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

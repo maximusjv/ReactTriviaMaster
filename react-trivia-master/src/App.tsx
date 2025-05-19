@@ -32,7 +32,7 @@ const App: React.FC = () => {
 
     return (
         triviaManagerState.isLoading ? <LoadingComponent/> : <Outlet context={
-            triviaManagerState
+            triviaManagerState.value
         }/>
     );
 };
