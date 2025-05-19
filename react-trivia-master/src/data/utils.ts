@@ -10,9 +10,9 @@ export function shuffle<T>(array: T[]): T[] {
 
 export function Retry<T>(attempts: number, delayMs: number = 10) {
   return function (
-    target: T,
-    propertyName: string,
-    descriptor: PropertyDescriptor
+      target: T,
+      propertyName: string,
+      descriptor: PropertyDescriptor
   ) {
     const originalMethod = descriptor.value;
 
@@ -23,12 +23,11 @@ export function Retry<T>(attempts: number, delayMs: number = 10) {
       while (attemptCount < attempts) {
         attemptCount++;
         try {
-          const result = await originalMethod.apply(this, args);
-          return result;
+          return await originalMethod.apply(this, args);
         } catch (error) {
           lastError = error;
           console.log(
-            `Attempt ${attemptCount} failed for method ${propertyName}. Error: ${error}`
+              `Attempt ${attemptCount} failed for method ${propertyName}. Error: ${error}`
           );
           if (attemptCount < attempts && delayMs > 0) {
             await new Promise((resolve) => setTimeout(resolve, delayMs));
@@ -36,10 +35,10 @@ export function Retry<T>(attempts: number, delayMs: number = 10) {
         }
       }
       console.error(
-        `Failed after ${attempts} attempts for method ${propertyName}. Last error:`,
-        lastError
+          `Failed after ${attempts} attempts for method ${propertyName}. Last error:`,
+          lastError
       );
-      throw lastError; 
+      throw lastError;
     };
 
     return descriptor;

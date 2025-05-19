@@ -4,7 +4,7 @@ import { Retry } from "@data/utils";
 
 enum ResponseCode {
   Success = 0,
-  NoResusts,
+  NoResults,
   InvalidParameter,
   TokenNotFound,
   TokenEmpty,

@@ -22,7 +22,7 @@ export default class TriviaManager {
         (await db.fetchCategories()).forEach((cat) => {
           categories_map.set(cat.id, cat);
           categories_map.set(cat.name, cat);
-        })
+        });
         return TriviaManager.instance = new TriviaManager(db, categories_map);
       }
   }

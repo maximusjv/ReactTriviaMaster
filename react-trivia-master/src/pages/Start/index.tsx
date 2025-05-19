@@ -10,7 +10,7 @@ const Start: React.FC = () => {
             </button>
         </div>
     );
-}
+};
 
 
 export default Start;
