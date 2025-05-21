@@ -40,7 +40,10 @@ const Game: React.FC = () => {
                                           }])}/> : null;
             break;
         case GameState.RESULTS:
-            content = <Results record={record}/>;
+            content = <Results record={record} reset={() => {
+                setTrivia(null);
+                setRecord([]);
+            }}/>;
             break;
         default:
             content = null;
