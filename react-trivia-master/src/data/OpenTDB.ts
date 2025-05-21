@@ -53,13 +53,14 @@ type QuestionResponse = {
 };
 
 function decodeRawQuestion(rawQuestion: RawQuestion): RawQuestion {
+  const decode =  decodeURIComponent;
   return {
-    category: atob(rawQuestion.category),
-    type: atob(rawQuestion.type),
-    difficulty: atob(rawQuestion.difficulty),
-    question: atob(rawQuestion.question),
-    correct_answer: atob(rawQuestion.correct_answer),
-    incorrect_answers: rawQuestion.incorrect_answers.map(atob),
+    category: decode(rawQuestion.category),
+    type: decode(rawQuestion.type),
+    difficulty: decode(rawQuestion.difficulty),
+    question: decode(rawQuestion.question),
+    correct_answer: decode(rawQuestion.correct_answer),
+    incorrect_answers: rawQuestion.incorrect_answers.map(decode),
   };
 }
 
@@ -150,8 +151,8 @@ export default class OpenTriviaDB {
     if (this.session_token) {
       url.searchParams.append("token", this.session_token);
     }
+    url.searchParams.append("encode", "url3986");
 
-    url.searchParams.append("encode", "base64");
 
     const response = await fetch(url.toString());
 
