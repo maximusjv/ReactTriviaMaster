@@ -1,5 +1,4 @@
 import type { Category } from "@data/Question";
-import Question, { QuestionDifficulty, QuestionType } from "@data/Question";
 import { Retry } from "@data/utils";
 
 enum ResponseCode {
@@ -40,17 +39,29 @@ type CategoryResponse = {
   ];
 };
 
-type QuestionRequest = {
-  response_code: number;
-  results: {
+type RawQuestion = {
     category: string;
     type: string;
     difficulty: string;
     question: string;
     correct_answer: string;
     incorrect_answers: string[];
-  }[];
+}
+type QuestionResponse = {
+  response_code: number;
+  results: RawQuestion[];
 };
+
+function decodeRawQuestion(rawQuestion: RawQuestion): RawQuestion {
+  return {
+    category: atob(rawQuestion.category),
+    type: atob(rawQuestion.type),
+    difficulty: atob(rawQuestion.difficulty),
+    question: atob(rawQuestion.question),
+    correct_answer: atob(rawQuestion.correct_answer),
+    incorrect_answers: rawQuestion.incorrect_answers.map(atob),
+  };
+}
 
 export default class OpenTriviaDB {
   private constructor(private session_token: string) {}
@@ -124,8 +135,7 @@ export default class OpenTriviaDB {
     difficulty: string | null,
     amount: number,
     type: string | null,
-    getCategoryFn: (name: string) => Category
-  ): Promise<Question[]> {
+  ): Promise<RawQuestion[]> {
     const url = new URL("https://opentdb.com/api.php");
     url.searchParams.append("amount", amount.toString());
     if (category) {
@@ -140,21 +150,15 @@ export default class OpenTriviaDB {
     if (this.session_token) {
       url.searchParams.append("token", this.session_token);
     }
+
+    url.searchParams.append("encode", "base64");
+
     const response = await fetch(url.toString());
 
     if (response.ok) {
-      const body: QuestionRequest = await response.json();
+      const body: QuestionResponse = await response.json();
       if (body.response_code === ResponseCode.Success) {
-        return body.results.map((q) => {
-          return new Question(
-            getCategoryFn(q.category),
-            q.question,
-            QuestionDifficulty[q.difficulty as keyof typeof QuestionDifficulty],
-            QuestionType[q.type as keyof typeof QuestionType],
-            q.correct_answer,
-            q.incorrect_answers
-          );
-        });
+        return body.results.map(decodeRawQuestion);
       } else if (body.response_code === ResponseCode.TokenEmpty) {
         this.session_token = await OpenTriviaDB.fetchSessionToken();
         return this.fetchQuestions(
@@ -162,7 +166,6 @@ export default class OpenTriviaDB {
           difficulty,
           amount,
           type,
-          getCategoryFn
         );
       } else {
         throw new Error(JSON.stringify(body));

@@ -1,5 +1,7 @@
-import type { Category, QuestionDifficulty, QuestionType } from "@data/Question";
+import  {type  Category, QuestionType, QuestionDifficulty} from "@data/Question";
+import Question from "@data/Question";
 import OpenTriviaDB from "@data/OpenTDB";
+import {Trivia} from "@data/Trivia.ts";
 
 export type TriviaOptions = {
   category: Category | null;
@@ -43,9 +45,33 @@ export default class TriviaManager {
     return this._categories;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public async buildTrivia(options: TriviaOptions) {
+  public category(key: number | string) {
+      return this._categories_map.get(key);
+  }
 
+  public async buildTrivia(options: TriviaOptions): Promise<Trivia> {
+      const rawQuestions = await this._DB.fetchQuestions(
+          options.category?.id ?? null,
+          options.difficulty,
+          options.questionAmount,
+          options.type
+      );
+      const questions = rawQuestions.map((question) =>
+      new Question(
+          this._categories_map.get(question.category)!,
+          question.question,
+          question.difficulty as QuestionDifficulty,
+          question.type as QuestionType,
+          question.correct_answer,
+          question.incorrect_answers
+      ));
+      return new Trivia(
+          options.category,
+          options.type,
+          options.difficulty,
+          options.timer,
+          questions
+      );
   }
 
 
