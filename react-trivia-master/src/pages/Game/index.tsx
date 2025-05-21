@@ -20,8 +20,8 @@ const Game: React.FC = () => {
     let content: any;
 
     let gameState = GameState.BUILD;
-    if(trivia != null) gameState = GameState.PLAY;
-    if(trivia != null && record.length == trivia.length) gameState = GameState.RESULTS;
+    if (trivia != null) gameState = GameState.PLAY;
+    if (trivia != null && record.length == trivia.length) gameState = GameState.RESULTS;
 
     switch (gameState) {
         case GameState.BUILD:
@@ -34,10 +34,10 @@ const Game: React.FC = () => {
             break;
         case GameState.PLAY:
             content = trivia ? <QuestionCard question={trivia.getQuestion(record.length)}
-                                          onAnswer={(answer: string) => setRecord([...record, {
-                                              question: trivia.getQuestion(record.length),
-                                              answer: answer
-                                          }])}/> : null;
+                                             onAnswer={(answer: string) => setRecord([...record, {
+                                                 question: trivia.getQuestion(record.length),
+                                                 answer: answer
+                                             }])}/> : null;
             break;
         case GameState.RESULTS:
             content = <Results record={record} reset={() => {
@@ -49,8 +49,8 @@ const Game: React.FC = () => {
             content = null;
     }
 
-    return (<div className="flex justify-center items-center h-screen">
-        {content}
+    return (<div className="min-h-screen bg-gray-100 py-6 flex flex-col justify-center items-center">
+            {content}
     </div>);
 
 };

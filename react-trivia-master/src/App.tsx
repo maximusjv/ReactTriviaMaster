@@ -16,10 +16,10 @@ const App: React.FC = () => {
     useEffect(() => {
         TriviaManager.getInstance().then((manager) => {
             setTriviaManagerState({
-                    isLoading: false,
-                    reason: null,
-                    value: manager
-                });
+                isLoading: false,
+                reason: null,
+                value: manager
+            });
         }, (reason) => {
             setTriviaManagerState({
                 isLoading: false,
@@ -31,9 +31,10 @@ const App: React.FC = () => {
 
 
     return (
-        triviaManagerState.isLoading ? <LoadingComponent/> : <Outlet context={
-            triviaManagerState.value
-        }/>
+        <div className="min-h-screen bg-gray-100 flex flex-col justify-center">
+            {triviaManagerState.isLoading ? <LoadingComponent/> : <Outlet context={triviaManagerState.value}/>}
+        </div>
+
     );
 };
 

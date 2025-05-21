@@ -10,10 +10,10 @@ type QuestionCardProps = {
 
 const QuestionCard: React.FC<QuestionCardProps> = ({question, onAnswer}) => {
     return <MainContainer>
-        <h1 className="text-2xl text-pretty text-sky-950 text-center h-fit">{question.question}</h1>
-        <div className="flex flex-col justify-evenly w-1/2 ">
+        <h1 className="text-2xl font-semibold text-gray-800 text-center mb-6">{question.question}</h1>
+        <div className="grid gap-4">
             {question.answers.map(answer => (
-                <ActionButton key={answer} onClick={() => onAnswer(answer)}>
+                <ActionButton key={answer} onClick={() => onAnswer(answer)} className="min-w-2xs">
                     {answer}
                 </ActionButton>
             ))}
