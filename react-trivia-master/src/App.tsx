@@ -1,7 +1,7 @@
 import {Outlet} from 'react-router';
 import * as React from "react";
-import TriviaManager from "@data/TriviaManager";
 import {useEffect, useState} from "react";
+import TriviaManager from "@data/TriviaManager";
 import type {Loading} from "@/types.ts";
 import LoadingComponent from "@components/Loading";
 

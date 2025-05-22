@@ -1,5 +1,4 @@
 import * as React from "react";
-import Index from "components/MainContainer";
 import MainContainer from "components/MainContainer";
 
 const Loading: React.FC = () => {

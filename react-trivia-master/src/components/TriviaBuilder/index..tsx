@@ -1,7 +1,7 @@
 import TriviaManager from "@data/TriviaManager.ts";
 import * as React from "react";
-import type {Trivia} from "@data/Trivia.ts";
 import {type FormEvent, type FormEventHandler} from "react";
+import type {Trivia} from "@data/Trivia.ts";
 import {QuestionDifficulty} from "@data/Question.ts";
 import MainComponent from "components/MainContainer";
 import ActionButton from "components/ActionButton";
@@ -38,7 +38,7 @@ const TriviaBuilder: React.FC<TriviaBuilderProps> = ({triviaManager, setTrivia})
     return (
         <MainComponent>
             <form
-                className="min-w-min min-h-min bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+                className="min-w-min min-h-min bg-white rounded px-2 py-2 md:px-8 md:py-8 md:m-4"
                 onSubmit={handleSubmit}>
                 <div className="mb-4">
                     <label htmlFor="category" className="block text-gray-700 text-sm font-bold mb-2">
@@ -77,7 +77,8 @@ const TriviaBuilder: React.FC<TriviaBuilderProps> = ({triviaManager, setTrivia})
                     </select>
                 </div>
 
-                <ActionButton type="submit" className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                <ActionButton type="submit"
+                              className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                     Play the trivia!
                 </ActionButton>
             </form>
