@@ -22,9 +22,6 @@ export default class TriviaManager {
       else {
         const db = await OpenTriviaDB.init();
         const categories = await db.fetchCategories();
-
-
-
         return TriviaManager.instance = new TriviaManager(db, categories);
       }
   }
@@ -50,12 +47,13 @@ export default class TriviaManager {
   }
 
   public async buildTrivia(options: TriviaOptions): Promise<Trivia> {
-      const rawQuestions = await this._DB.fetchQuestions(
-          options.category?.id ?? null,
-          options.difficulty,
-          options.questionAmount,
-          options.type
-      );
+      const rawQuestions = await
+          this._DB.fetchQuestions({
+              category: options.category?.id ?? null,
+              difficulty: options.difficulty,
+              amount: options.questionAmount,
+              type: options.type
+          });
       const questions = rawQuestions.map((question) =>
       new Question(
           this._categories_map.get(question.category)!,

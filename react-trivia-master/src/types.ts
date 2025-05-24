@@ -1,5 +1,5 @@
 export type Loading<T> = {
     isLoading: boolean;
-    reason: any;
+    failure: any;
     value: T | null;
 };

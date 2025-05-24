@@ -1,3 +1,5 @@
+import {APIError} from "@data/OpenTDB.ts";
+
 export function shuffle<T>(array: T[]): T[] {
   const arr = array.map((a) => a);
   for (let i: number = array.length - 1; i > 0; i--) {
@@ -25,17 +27,21 @@ export function Retry<T>(attempts: number, delayMs: number = 10) {
         try {
           return await originalMethod.apply(this, args);
         } catch (error) {
-          lastError = error;
-          console.log(
-              `Attempt ${attemptCount} failed for method ${propertyName}. Error: ${error}`
-          );
-          if (attemptCount < attempts && delayMs > 0) {
-            await new Promise((resolve) => setTimeout(resolve, delayMs));
+          if (error instanceof APIError && error.repeatable()) {
+            lastError = error;
+            console.log(
+                `Attempt ${attemptCount} failed for method ${propertyName} due to APIError: ${error}`
+            );
+            if (attemptCount < attempts && delayMs > 0) {
+              await new Promise((resolve) => setTimeout(resolve, delayMs));
+            }
+          } else {
+            throw error;
           }
         }
       }
       console.error(
-          `Failed after ${attempts} attempts for method ${propertyName}. Last error:`,
+          `Failed after ${attempts} attempts for method ${propertyName}. Last APIError:`,
           lastError
       );
       throw lastError;

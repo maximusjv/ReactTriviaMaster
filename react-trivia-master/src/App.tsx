@@ -4,12 +4,16 @@ import {useEffect, useState} from "react";
 import TriviaManager from "@data/TriviaManager";
 import type {Loading} from "@/types.ts";
 import LoadingComponent from "@components/Loading";
+import {type APIFetchError, APIRequestRejected} from "@data/OpenTDB.ts";
+import ErrorComponent from "@components/ErrorComponent";
+
+
 
 
 const App: React.FC = () => {
     const [triviaManagerState, setTriviaManagerState] = useState<Loading<TriviaManager>>({
         isLoading: true,
-        reason: null,
+        failure: null,
         value: null,
     });
 
@@ -17,13 +21,13 @@ const App: React.FC = () => {
         TriviaManager.getInstance().then((manager) => {
             setTriviaManagerState({
                 isLoading: false,
-                reason: null,
+                failure: null,
                 value: manager
             });
-        }, (reason) => {
+        }, (reason: APIFetchError | APIRequestRejected) => {
             setTriviaManagerState({
                 isLoading: false,
-                reason: reason,
+                failure: reason,
                 value: null,
             });
         });
@@ -32,7 +36,12 @@ const App: React.FC = () => {
 
     return (
         <div className="min-h-screen bg-gray-100 flex flex-col justify-center">
-            {triviaManagerState.isLoading ? <LoadingComponent/> : <Outlet context={triviaManagerState.value}/>}
+            {triviaManagerState.isLoading ? <LoadingComponent/> :
+                (
+                    triviaManagerState.failure ?
+                        <ErrorComponent error={triviaManagerState.failure}/> :
+                    <Outlet context={triviaManagerState.value}/>
+                )}
         </div>
 
     );

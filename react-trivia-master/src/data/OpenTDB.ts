@@ -1,7 +1,7 @@
 import type {Category} from "@data/Question";
 import {Retry} from "@data/utils";
 
-enum ResponseCode {
+export enum ResponseCode {
     Success = 0,
     NoResults,
     InvalidParameter,
@@ -56,21 +56,42 @@ interface QuestionResponse extends ResponseWithCode {
     results: RawQuestion[];
 }
 
-class APIRequestRejected extends Error {
-    constructor(private _code: ResponseCode, private _request: string) {
-        const message = `API request: "${_request}" rejected with response code "${ResponseCode[_code]}"`;
+interface QuestionRequestParameters {
+    category: number | null;
+    difficulty: string | null;
+    amount: number;
+    type: string | null;
+}
+
+export class APIError extends Error {
+    constructor(public readonly request: string, message: string) {
         super(message);
     }
 
-    get code() {
-        return this._code;
+    repeatable(): boolean {
+        return false;
     }
 }
 
-class APIFetchError extends Error {
-    constructor(private _request: string, private _response: Response) {
-        const message = `API request: "${_request}" failed with status code "${_response.status}, ${_response.statusText}"`;
-        super(message);
+export class APIRequestRejected extends APIError {
+    constructor(public readonly code: ResponseCode, request: string) {
+        const message = `API request: "${request}" rejected with response code "${ResponseCode[code]}"`;
+        super(request, message);
+    }
+
+    repeatable(): boolean {
+        return this.code == ResponseCode.Success || this.code == ResponseCode.TokenEmpty || this.code == ResponseCode.RateLimit;
+    }
+}
+
+export class APIFetchError extends APIError {
+    constructor(request: string, public readonly response: Response) {
+        const message = `API request: "${request}" failed with status code "${response.status}, ${response.statusText}"`;
+        super(request, message);
+    }
+
+    repeatable(): boolean {
+        return false;
     }
 }
 
@@ -156,12 +177,41 @@ export default class OpenTriviaDB {
     }
 
     @Retry(3, 100)
-    public async fetchQuestions(
-        category: number | null,
-        difficulty: string | null,
-        amount: number,
-        type: string | null,
-    ): Promise<RawQuestion[]> {
+    public async fetchQuestions(requestParameters: QuestionRequestParameters): Promise<RawQuestion[]> {
+
+        const request = this.buildQuestionUrl(requestParameters, this.session_token);
+        const response = await fetch(request);
+
+        if (response.ok) {
+            const body: QuestionResponse = await response.json();
+            if (body.response_code === ResponseCode.Success) {
+                return body.results.map(decodeRawQuestion);
+            } else if (body.response_code === ResponseCode.TokenEmpty) {
+                // Because of the bug in API we have to determine whether there is no enough questions at all
+                //  that the token has not enough questions
+                if (await new Promise(resolve => setTimeout(() => resolve(this.hasQuestions(requestParameters)), 5000))) {
+                    this.session_token = await OpenTriviaDB.fetchSessionToken();
+                    return this.fetchQuestions(requestParameters);
+                } else {
+                    throw new APIRequestRejected(ResponseCode.NoResults, request);
+                }
+
+            } else {
+                throw new APIRequestRejected(body.response_code, request);
+            }
+        } else {
+            throw new APIFetchError(request, response);
+        }
+    }
+
+    private buildQuestionUrl({
+                                 category,
+                                 difficulty,
+                                 amount,
+                                 type,
+                             }: QuestionRequestParameters,
+                             token: string | null,
+    ): string {
         const url = new URL("https://opentdb.com/api.php");
         url.searchParams.append("amount", amount.toString());
         if (category) {
@@ -173,26 +223,23 @@ export default class OpenTriviaDB {
         if (type) {
             url.searchParams.append("type", type);
         }
-        if (this.session_token) {
-            url.searchParams.append("token", this.session_token);
+        if (token) {
+            url.searchParams.append("token", token);
         }
         url.searchParams.append("encode", "url3986");
+        return url.toString();
+    }
 
-        const request = url.toString();
+    private async hasQuestions(requestParameters: QuestionRequestParameters): Promise<boolean> {
+        const request = this.buildQuestionUrl(requestParameters, null);
         const response = await fetch(request);
 
         if (response.ok) {
             const body: QuestionResponse = await response.json();
             if (body.response_code === ResponseCode.Success) {
-                return body.results.map(decodeRawQuestion);
-            } else if (body.response_code === ResponseCode.TokenEmpty) {
-                this.session_token = await OpenTriviaDB.fetchSessionToken();
-                return this.fetchQuestions(
-                    category,
-                    difficulty,
-                    amount,
-                    type,
-                );
+                return true;
+            } else if (body.response_code === ResponseCode.NoResults) {
+                return false;
             } else {
                 throw new APIRequestRejected(body.response_code, request);
             }

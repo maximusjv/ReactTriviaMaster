@@ -5,6 +5,7 @@ import type {Trivia} from "@data/Trivia.ts";
 import {QuestionDifficulty} from "@data/Question.ts";
 import MainComponent from "components/MainContainer";
 import ActionButton from "components/ActionButton";
+import ErrorComponent from "@components/ErrorComponent";
 
 type TriviaBuilderProps = {
     triviaManager: TriviaManager;
@@ -19,6 +20,8 @@ type TriviaOptionsFormType = {
 
 const TriviaBuilder: React.FC<TriviaBuilderProps> = ({triviaManager, setTrivia}) => {
 
+    const [error, setError] = React.useState<Error>();
+
     const handleSubmit: FormEventHandler<HTMLFormElement> = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
@@ -30,7 +33,12 @@ const TriviaBuilder: React.FC<TriviaBuilderProps> = ({triviaManager, setTrivia})
             questionAmount: +formValues.length,
             timer: null,
             type: null,
-        }).then((trivia) => setTrivia(trivia));
+        }).then((trivia) => {
+            setTrivia(trivia);
+            setError(undefined);
+        }, (reason) => {
+            setError(reason);
+        });
 
 
     };
@@ -76,7 +84,9 @@ const TriviaBuilder: React.FC<TriviaBuilderProps> = ({triviaManager, setTrivia})
                         <option value={30}>Long (30 questions)</option>
                     </select>
                 </div>
-
+                {error ?
+                    <ErrorComponent error={error}/>
+                    : null}
                 <ActionButton type="submit"
                               className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                     Play the trivia!
