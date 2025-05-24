@@ -3,11 +3,9 @@ import * as React from "react";
 import {useEffect, useState} from "react";
 import TriviaManager from "@data/TriviaManager";
 import type {Loading} from "@/types.ts";
-import LoadingComponent from "@components/Loading";
 import {type APIFetchError, APIRequestRejected} from "@data/OpenTDB.ts";
 import ErrorComponent from "@components/ErrorComponent";
-
-
+import LoadingSpinner from "@components/Loading";
 
 
 const App: React.FC = () => {
@@ -35,12 +33,13 @@ const App: React.FC = () => {
 
 
     return (
-        <div className="min-h-screen bg-gray-100 flex flex-col justify-center">
-            {triviaManagerState.isLoading ? <LoadingComponent/> :
+        <div className="min-h-screen bg-gray-100 flex flex-col justify-center items-center">
+            {triviaManagerState.isLoading ?
+                    <LoadingSpinner/> :
                 (
                     triviaManagerState.failure ?
                         <ErrorComponent error={triviaManagerState.failure}/> :
-                    <Outlet context={triviaManagerState.value}/>
+                        <Outlet context={triviaManagerState.value}/>
                 )}
         </div>
 

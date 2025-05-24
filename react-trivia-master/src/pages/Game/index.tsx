@@ -6,6 +6,7 @@ import TriviaBuilder from "@components/TriviaBuilder/index..tsx";
 import type {Trivia} from "@data/Trivia.ts";
 import Results, {type AnswerRecord} from "@components/Results";
 import QuestionCard from "@components/QuestionCard";
+import MainContainer from "@components/MainContainer";
 
 enum GameState {
     BUILD,
@@ -49,9 +50,11 @@ const Game: React.FC = () => {
             content = null;
     }
 
-    return (<div className="min-h-screen bg-gray-100 py-6 flex flex-col justify-center items-center">
+    return (
+        <MainContainer>
             {content}
-    </div>);
+        </MainContainer>
+    );
 
 };
 
