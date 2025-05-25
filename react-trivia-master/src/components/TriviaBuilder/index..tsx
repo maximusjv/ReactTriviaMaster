@@ -12,7 +12,7 @@ type TriviaBuilderProps = {
 }
 
 type TriviaOptionsFormType = {
-    category: string; difficulty: string; length: string;
+    category: string; difficulty: string; length: string; timer: string;
 }
 
 const TriviaBuilder: React.FC<TriviaBuilderProps> = ({triviaManager, setTrivia}) => {
@@ -32,7 +32,7 @@ const TriviaBuilder: React.FC<TriviaBuilderProps> = ({triviaManager, setTrivia})
             category: triviaManager.category(+formValues.category) ?? null,
             difficulty: formValues.difficulty === "all" ? null : formValues.difficulty as QuestionDifficulty,
             questionAmount: +formValues.length,
-            timer: null,
+            timer: formValues.timer === "all" ? null : +formValues.timer,
             type: null,
         }).then((trivia) => {
             setTrivia(trivia);
@@ -76,7 +76,7 @@ const TriviaBuilder: React.FC<TriviaBuilderProps> = ({triviaManager, setTrivia})
                     <option value={QuestionDifficulty.Hard}>Hard</option>
                 </select>
             </div>
-            <div className="mb-6">
+            <div className="mb-4">
                 <label htmlFor="length" className="block text-gray-700 text-sm font-bold mb-2">
                     Pick length:
                 </label>
@@ -85,6 +85,18 @@ const TriviaBuilder: React.FC<TriviaBuilderProps> = ({triviaManager, setTrivia})
                     <option value={10}>Short (10 questions)</option>
                     <option value={20}>Medium (20 questions)</option>
                     <option value={30}>Long (30 questions)</option>
+                </select>
+            </div>
+            <div className="mb-4">
+                <label htmlFor="timer" className="block text-gray-700 text-sm font-bold mb-2">
+                    Pick Question Difficulty:
+                </label>
+                <select name="timer" id="timer"
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    <option value={"inf"}>Infinite</option>
+                    <option value={"10000"}>Short (10 seconds)</option>
+                    <option value={"20000"}>Medium (20 seconds)</option>
+                    <option value={"30000"}>Long (30 seconds)</option>
                 </select>
             </div>
             {error ? <ErrorComponent error={error}/> : null}

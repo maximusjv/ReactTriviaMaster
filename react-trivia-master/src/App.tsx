@@ -2,11 +2,15 @@ import {Outlet} from 'react-router';
 import * as React from "react";
 import {useEffect, useState} from "react";
 import TriviaManager from "@data/TriviaManager";
-import type {Loading} from "@/types.ts";
 import {type APIFetchError, APIRequestRejected} from "@data/OpenTDB.ts";
 import ErrorComponent from "@components/ErrorComponent";
 import LoadingSpinner from "@components/Loading";
 
+interface Loading<T> {
+    isLoading: boolean;
+    failure: any;
+    value: T | null;
+};
 
 const App: React.FC = () => {
     const [triviaManagerState, setTriviaManagerState] = useState<Loading<TriviaManager>>({

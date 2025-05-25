@@ -47,10 +47,6 @@ export default class Question {
     return this._correct_answer;
   }
 
-  get wrong_answers(): string[] {
-    return this._wrong_answers;
-  }
-
   get answers(): string[] {
     return this._type === QuestionType.MultipleChoice
       ? shuffle([this._correct_answer, ...this._wrong_answers])

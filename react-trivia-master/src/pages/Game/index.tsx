@@ -38,7 +38,8 @@ const Game: React.FC = () => {
                                              onAnswer={(answer: string) => setRecord([...record, {
                                                  question: trivia.getQuestion(record.length),
                                                  answer: answer
-                                             }])}/> : null;
+                                             }])}
+                                             time = {trivia.timer}/> : null;
             break;
         case GameState.RESULTS:
             content = <Results record={record} reset={() => {
