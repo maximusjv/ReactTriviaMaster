@@ -33,7 +33,7 @@ export function Retry<T>(attempts: number, delayMs: number = 10) {
                 `Attempt ${attemptCount} failed for method ${propertyName} due to APIError: ${error}`
             );
             if (attemptCount < attempts && delayMs > 0) {
-              await new Promise((resolve) => setTimeout(resolve, delayMs));
+              await new Promise((resolve) => setTimeout(resolve, delayMs * 10**(attemptCount-1) ));
             }
           } else {
             throw error;
