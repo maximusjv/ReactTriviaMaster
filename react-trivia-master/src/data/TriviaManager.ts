@@ -11,7 +11,6 @@ export type TriviaOptions = {
   questionAmount: number;
 };
 
-
 export default class TriviaManager {
 
   _categories_map: Map<number | string, Category>;
@@ -71,7 +70,4 @@ export default class TriviaManager {
           questions
       );
   }
-
-
-
 }

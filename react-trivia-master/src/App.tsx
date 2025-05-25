@@ -10,7 +10,7 @@ interface Loading<T> {
     isLoading: boolean;
     failure: any;
     value: T | null;
-};
+}
 
 const App: React.FC = () => {
     const [triviaManagerState, setTriviaManagerState] = useState<Loading<TriviaManager>>({

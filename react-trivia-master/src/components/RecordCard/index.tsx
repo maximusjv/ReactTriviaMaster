@@ -1,4 +1,5 @@
 import type {AnswerRecord} from "@components/Results";
+import * as React from "react";
 
 interface RecordCardProps {
     record: AnswerRecord;
