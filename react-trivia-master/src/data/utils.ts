@@ -1,7 +1,7 @@
 import {APIError} from "@data/OpenTDB.ts";
 
 export function shuffle<T>(array: T[]): T[] {
-  const arr = array.map((a) => a);
+  const arr = array.slice();
   for (let i: number = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [arr[j], arr[i]] = [arr[i], arr[j]];
