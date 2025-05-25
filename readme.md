@@ -113,6 +113,9 @@ To get a local copy up and running, follow these simple steps:
 * GitHub: [@maxiusjv](https://github.com/maximusjv)
 * LinkedIn: [Maksim Vinokur](https://www.linkedin.com/in/maksim-vinokur-35918a303/)
 
-## License
+## License And Attribution
+* This project uses: [Open Trivia Database](https://opentdb.com/).
+* Created and maintained by [PIXELTAIL GAMES LLC](https://www.pixeltailgames.com/).
+* And distributed under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
 
-This project is licensed under the MIT License - see the `LICENSE.md` file for details.
+Therefor this project also provided under CC BY-SA 4.0. See LICENSE.md for more information
