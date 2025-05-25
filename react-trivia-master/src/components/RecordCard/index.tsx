@@ -36,9 +36,9 @@ const RecordCard: React.FC<RecordCardProps> = ({record}) => {
                     <span className="font-semibold text-gray-900">Difficulty:</span> <span
                     className="capitalize">{record.question.difficulty}</span>
                 </p>
-                <p className="text-wrap text-start">
-                    <span className="font-semibold text-gray-900">Correct Answer:</span> <span
-                    className="font-medium">{record.question.correct_answer}</span>
+                <p className="text-wrap text-start text-green-600">
+                    <span className="font-semibold text-green-700">Correct Answer:</span> <span
+                    className="font-medium ">{record.question.correct_answer}</span>
                 </p>
                 {!isCorrect && (
                     <p className="text-wrap text-start text-red-600">
