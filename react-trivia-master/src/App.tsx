@@ -2,7 +2,7 @@ import {Outlet} from 'react-router';
 import * as React from "react";
 import {useEffect, useState} from "react";
 import TriviaManager from "@data/TriviaManager";
-import {type APIFetchError, APIRequestRejected} from "@data/OpenTDB.ts";
+import {APIError} from "@data/OpenTDB.ts";
 import ErrorComponent from "@components/ErrorComponent";
 import LoadingSpinner from "@components/Loading";
 
@@ -26,7 +26,7 @@ const App: React.FC = () => {
                 failure: null,
                 value: manager
             });
-        }, (reason: APIFetchError | APIRequestRejected) => {
+        }, (reason: APIError) => {
             setTriviaManagerState({
                 isLoading: false,
                 failure: reason,
