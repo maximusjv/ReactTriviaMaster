@@ -8,7 +8,7 @@ import LoadingSpinner from "@components/Loading";
 
 interface Loading<T> {
     isLoading: boolean;
-    failure: any;
+    failure: Error | null;
     value: T | null;
 }
 
