@@ -2,7 +2,7 @@ import * as React from "react";
 import {useOutletContext} from "react-router";
 import type TriviaManager from "@data/TriviaManager.ts";
 import {useState} from "react";
-import TriviaBuilder from "@components/TriviaBuilder/index..tsx";
+import TriviaBuilder from "@components/TriviaBuilder";
 import type {Trivia} from "@data/Trivia.ts";
 import Results, {type AnswerRecord} from "@components/Results";
 import QuestionCard from "@components/QuestionCard";

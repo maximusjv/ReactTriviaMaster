@@ -32,7 +32,7 @@ const TriviaBuilder: React.FC<TriviaBuilderProps> = ({triviaManager, setTrivia})
             category: triviaManager.category(+formValues.category) ?? null,
             difficulty: formValues.difficulty === "all" ? null : formValues.difficulty as QuestionDifficulty,
             questionAmount: +formValues.length,
-            timer: formValues.timer === "all" ? null : +formValues.timer,
+            timer: formValues.timer === "inf" ? null : +formValues.timer,
             type: null,
         }).then((trivia) => {
             setTrivia(trivia);
