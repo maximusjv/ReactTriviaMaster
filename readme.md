@@ -118,4 +118,6 @@ To get a local copy up and running, follow these simple steps:
 * Created and maintained by [PIXELTAIL GAMES LLC](https://www.pixeltailgames.com/).
 * And distributed under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
 
-Therefor this project also provided under CC BY-SA 4.0. See LICENSE.md for more information or visit https://creativecommons.org/licenses/by-sa/4.0//
+
+Therefor this project also provided under CC BY-SA 4.0. See LICENSE.md for more information.
+React Trivia Master © 2025 by Maksim Vinokur is licensed under CC BY-SA 4.0. To view a copy of this license, visit https://creativecommons.org/licenses/by-sa/4.0/
